@@ -1,0 +1,100 @@
+#+TITLE: Raspberry Pi Audio Server
+
+Using Raspberry Pi 4 with headless install, with Raspian bullseye
+
+Log in with ssh and force password:
+#+begin_src sh
+ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no example.com
+#+end_src
+
+If the system is setup headless and you need to kill the config wizard:
+https://forums.raspberrypi.com/viewtopic.php?t=231557
+https://github.com/raspberrypi-ui/piwiz/issues/18
+
+#+begin_src sh
+sudo rm /etc/xdg/autostart/piwiz.desktop
+#+end_src
+
+look for the piwiz process and kill it
+#+begin_src sh
+ps aux | grep piwiz
+kill <pid> 
+#+end_src
+
+
+* Bluetooth speaker config
+
+bluealsa is not a thing.
+
+https://forums.raspberrypi.com/viewtopic.php?t=214373
+https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb
+https://wiretuts.com/connecting-bluetooth-audio-device-to-raspberry-pi
+
+Use the bluetoothctl utility to configure bluetooth:
+#+begin_src
+bluetoothctl
+#+end_src
+
+Verify device is paired with
+#+begin_src
+[bluetooth]# paired-devices
+#+end_src
+
+Connect to device with 
+#+begin_src
+[bluetooth]# connect <mac id>
+#+end_src
+
+* PulseAudio
+
+https://unix.stackexchange.com/questions/65246/change-pulseaudio-input-output-from-shell
+
+Start pulseaudio as server
+#+begin_src sh
+pulseaudio --start
+#+end_src
+
+#+begin_src sh
+pactl list short sinks
+pactl set-default-sink 1
+#+end_src
+
+If the bluetooth is connected, it should show up as one of the audio sinks.
+
+https://unix.stackexchange.com/questions/65246/change-pulseaudio-input-output-from-shell
+
+If there are multiple sinks then the audio input may be re-directed to the bluetooth. First list the inputs:
+#+begin_src sh
+pactl list short sink-inputs
+#+end_src
+the result will be similar to
+#+begin_src sh
+1       0       9       protocol-native.c       s16le 2ch 44100Hz
+#+end_src
+In this line, the number 1 represents the stream ID. It can be redirected to another sink with 
+#+begin_src sh
+pactl move-sink-input 1 1
+#+end_src
+
+
+
+* Playback
+
+Test if audio playback works:
+#+begin_src
+mpg123 <file>.mp3
+#+end_src
+
+* Mopidy
+
+https://docs.mopidy.com/en/latest/installation/raspberrypi/#how-to-for-raspbian
+https://docs.mopidy.com/en/latest/installation/raspberrypi/#testing-sound-output
+
+** run as a service
+
+https://docs.mopidy.com/en/latest/running/service/
+
+view config file with 
+#+begin_src sh
+sudo mopidyctl config
+#+end_src
