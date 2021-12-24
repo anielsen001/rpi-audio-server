@@ -1,0 +1,15 @@
+#+TITLE: mopidy - spotify integration
+
+* currently does not work
+
+* Install build tools
+
+#+begin_src sh
+sudo apt install build-essential python-dev python3-dev libffi-dev
+#+end_src
+
+* Install pyspotify
+
+#+begin_src sh
+sudo pip install pyspotify
+#+end_src
