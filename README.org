@@ -98,3 +98,21 @@ view config file with
 #+begin_src sh
 sudo mopidyctl config
 #+end_src
+
+Start service
+#+begin_src sh
+sudo systemctl stop mopidy
+#+end_src
+
+Stop service
+#+begin_src sh
+sudo systemctl stop mopidy
+#+end_src
+
+restart service
+#+begin_src sh
+sudo systemctl restart mopidy
+#+end_src
+
+* Mount music library from NAS via NFS
+
